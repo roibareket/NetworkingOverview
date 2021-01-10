@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+	<string name="accountType">Android Academy Account</string>
+	<string name="company_name">Android Academy</string>
+	<string name="login_failed">login failed</string>
+	<string name="new_user">New User?</string>
+	<string name="already_have_account">Already have account?</string>
+</resources>
