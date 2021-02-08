@@ -25,6 +25,9 @@ class NetwrokManager {
 					if(isAuthNeeded) {
 						addInterceptor(AuthInterceptor())
 					}
+					// Exercise 1
+					// make any request inject header: "USER-AGENT": "Android"
+					// addInterceptor(UserAgentInterceptor())
 					addInterceptor(newLoggingInterceptor())
 					authenticator(MyAuthenticator())
 				}
