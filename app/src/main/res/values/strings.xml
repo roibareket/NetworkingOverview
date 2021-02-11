@@ -3,4 +3,5 @@
 	<string name="execute_public_call">EXECUTE PUBLIC CALL</string>
 	<string name="execute_private_call">EXECUTE PRIVATE CALL</string>
 	<string name="login">LOGIN</string>
+	<string name="testMyAuthenticator">TEST_MY_AUTHENTICATOR</string>
 </resources>

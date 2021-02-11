@@ -9,7 +9,8 @@ import android.os.Bundle
 import com.androidaccademy.authentication.network.AuthApi
 import com.androidaccademy.authentication.ui.login.LoginActivity
 
-const val AUTH_TOKEN_TYPE = "BEARER"
+const val ACCESS_TOKEN = "ACCESS_TOKEN"
+const val REFRESH_TOKEN = "REFRESH_TOKEN"
 class CompanyAuthenticator(val context: Context) : AbstractAccountAuthenticator(context) {
 
 	override fun addAccount(

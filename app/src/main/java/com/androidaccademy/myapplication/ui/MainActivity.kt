@@ -6,9 +6,10 @@ import androidx.databinding.DataBindingUtil
 import com.androidaccademy.authentication.ui.login.LoginActivity
 import com.androidaccademy.myapplication.R
 import com.androidaccademy.myapplication.databinding.ActivityMainBinding
-import com.androidaccademy.myapplication.network.GitHubService
-import com.androidaccademy.myapplication.network.NetwrokManager
-import com.androidaccademy.myapplication.network.Repo
+import com.androidaccademy.myapplication.network.*
+import okhttp3.Protocol
+import okhttp3.Request
+import okhttp3.ResponseBody.Companion.toResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
@@ -22,10 +23,13 @@ class MainActivity : AppCompatActivity() {
 
 		binding.apply {
 			executePublicBtn.setOnClickListener {
-				executeGithubCall(NetwrokManager().gitHubServicePublic)
+				executeGithubCall(NetworkManager().gitHubServicePublic)
 			}
 			executePrivateBtn.setOnClickListener {
-				executeGithubCall(NetwrokManager().gitHubServicePrivate)
+				executeGithubCall(NetworkManager().gitHubServicePrivate)
+			}
+			testMyAuthenticator.setOnClickListener {
+				testMyAuthenticator()
 			}
 			login.setOnClickListener {
 				startActivity(
@@ -38,6 +42,8 @@ class MainActivity : AppCompatActivity() {
 		}
 
 	}
+
+	// everything below should be in view model
 
 	private fun executeGithubCall(githubApi: GitHubService) {
 		binding.resultTxt.text = ""
@@ -56,5 +62,24 @@ class MainActivity : AppCompatActivity() {
 				binding.resultTxt.text = t.toString()
 			}
 		})
+	}
+
+	private fun testMyAuthenticator() {
+		Thread {
+			okhttp3.Response.Builder()
+				.request(
+					Request.Builder()
+						.addHeader(AUTHORIZATION_HEADER, "my_access_token")
+						.url("https://github.com")
+						.build()
+				)
+				.protocol(Protocol.HTTP_1_1)
+				.code(401)
+				.message("test 401")
+				.body("test 401".toResponseBody(null))
+				.build().let { response ->
+					MyAuthenticator().authenticate(null, response)
+				}
+		}.start()
 	}
 }

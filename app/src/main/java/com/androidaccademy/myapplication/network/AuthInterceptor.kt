@@ -1,17 +1,17 @@
 package com.androidaccademy.myapplication.network
 
+import com.androidaccademy.authentication.services.authenticator.AccountManagerProvider
+import com.androidaccademy.myapplication.android.App
 import okhttp3.Interceptor
 import okhttp3.Protocol
 import okhttp3.Response
 import okhttp3.ResponseBody.Companion.toResponseBody
 
-val AUTHORIZATION_HEADER = "AUTHORIZATION_DUMMY" // "AUTHORIZATION"
+val AUTHORIZATION_HEADER = "AUTHORIZATION"
 
 class AuthInterceptor : Interceptor {
-	val accountManagerProvider = AccountManagerProvider.instance
-
 	override fun intercept(chain: Interceptor.Chain): Response =
-		accountManagerProvider.getAuthToken()?.let { accessToken ->
+		AccountManagerProvider.getAccessToken(App.instance)?.let { accessToken ->
 			chain.request()
 				.newBuilder()
 				.addHeader(AUTHORIZATION_HEADER, accessToken)

@@ -9,7 +9,10 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.androidaccademy.authentication.livedata.Event
 import com.androidaccademy.authentication.network.AuthApi
-import com.androidaccademy.authentication.services.authenticator.AUTH_TOKEN_TYPE
+import com.androidaccademy.authentication.network.Credentials
+import com.androidaccademy.authentication.services.authenticator.ACCESS_TOKEN
+import com.androidaccademy.authentication.services.authenticator.AccountManagerProvider
+import com.androidaccademy.authentication.services.authenticator.REFRESH_TOKEN
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Job
@@ -38,13 +41,13 @@ class LoginViewModel : ViewModel() {
 		val appContext = context.applicationContext
 		asyncJob {
 			try {
-				val token = AuthApi.instance.signIn(userName, password)
+				val credentials = AuthApi.instance.signIn(userName, password)
 				addAccount(
 					appContext,
 					userName,
 					password,
 					accountType,
-					token
+					credentials
 				)
 			} catch (ex: Exception) {
 				onLoginComplete.postValue(Event(LoginEvents.UserLoginFailed))
@@ -61,30 +64,36 @@ class LoginViewModel : ViewModel() {
 	) {
 		val appContext = context.applicationContext
 		asyncJob {
-			val token = AuthApi.instance.signUp(name, accountName, password)
+			val credentials = AuthApi.instance.signUp(name, accountName, password)
 			addAccount(
 				appContext,
 				accountName,
 				password,
 				accountType,
-				token
+				credentials
 			)
 		}
 	}
 
-	fun addAccount(
+	private fun addAccount(
 		context: Context,
 		userName: String,
 		password: String,
 		accountType: String,
-		token: String
+		credentials: Credentials
 	) {
 		val appContext = context.applicationContext
 		asyncJob {
 			val account = Account(userName, accountType)
+			AccountManagerProvider.addAccount(account, password, context)
+			AccountManagerProvider.setAuthToken(account,ACCESS_TOKEN, credentials.accessToken , context)
+			AccountManagerProvider.setAuthToken(account,REFRESH_TOKEN, credentials.refreshToken, context)
+
+
 			AccountManager.get(appContext).let { accountManager ->
-				accountManager.addAccountExplicitly(account, password, null)
-				accountManager.setAuthToken(account, AUTH_TOKEN_TYPE, token)
+
+				accountManager.setAuthToken(account, ACCESS_TOKEN, credentials.accessToken)
+				accountManager.setAuthToken(account, REFRESH_TOKEN, credentials.refreshToken)
 			}
 
 			onLoginComplete.postValue(Event(LoginEvents.UserLoggedIn))
