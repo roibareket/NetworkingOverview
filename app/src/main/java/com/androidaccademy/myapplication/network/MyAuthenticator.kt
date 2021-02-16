@@ -27,8 +27,12 @@ class MyAuthenticator : Authenticator {
 			.let { it?.second == AccountManagerProvider.getAccessToken(App.instance) }
 
 	private fun blockingRefreshToken() {
-		val refreshToken = ""
-		AuthApi.instance.refreshToken(refreshToken, App.instance)
+		// Exercise 2
+		// Get our current Refresh Token from AccountManagerProvider
+		// (we do something similar with our Access Token)
+
+		val currentRefreshToken = ""
+		AuthApi.instance.refreshToken(currentRefreshToken, App.instance)
 		Timber.e("token refreshed")
 	}
 

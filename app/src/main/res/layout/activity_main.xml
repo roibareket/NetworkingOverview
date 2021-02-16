@@ -7,6 +7,16 @@
 		android:layout_height="match_parent"
 		android:orientation="vertical">
 
+		<TextView
+			android:id="@+id/loginStatus"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			tools:text="@string/user_logged_in"
+			android:background="@color/green"
+			android:gravity="center"
+			android:textAppearance="@style/TextAppearance.AppCompat.Large"
+			android:textColor="@color/white"/>
+
 		<Button
 			android:id="@+id/executePublicBtn"
 			android:layout_width="wrap_content"

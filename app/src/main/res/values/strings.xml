@@ -4,4 +4,6 @@
 	<string name="execute_private_call">EXECUTE PRIVATE CALL</string>
 	<string name="login">LOGIN</string>
 	<string name="testMyAuthenticator">TEST_MY_AUTHENTICATOR</string>
+    <string name="login_needed">Login needed</string>
+	<string name="user_logged_in">User Logged In</string>
 </resources>

@@ -1,8 +1,9 @@
 package com.androidaccademy.myapplication.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
+import com.androidaccademy.authentication.services.authenticator.AccountManagerProvider
 import com.androidaccademy.authentication.ui.login.LoginActivity
 import com.androidaccademy.myapplication.R
 import com.androidaccademy.myapplication.databinding.ActivityMainBinding
@@ -13,6 +14,7 @@ import okhttp3.ResponseBody.Companion.toResponseBody
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
+import java.lang.Thread.sleep
 
 class MainActivity : AppCompatActivity() {
 	lateinit var binding: ActivityMainBinding
@@ -41,6 +43,22 @@ class MainActivity : AppCompatActivity() {
 			}
 		}
 
+	}
+
+	override fun onStart() {
+		super.onStart()
+		// don't ever do it. it's for demo only
+		Thread {
+			sleep(1000)
+			(AccountManagerProvider.getAccessToken(this@MainActivity)?.let {
+				R.string.user_logged_in
+			} ?: R.string.login_needed)
+				.let { loginResId ->
+					binding.loginStatus.post {
+						binding.loginStatus.setText(loginResId)
+					}
+				}
+		}.start()
 	}
 
 	// everything below should be in view model

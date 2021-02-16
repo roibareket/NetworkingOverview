@@ -10,7 +10,8 @@
 
 	<application>
 
-		<activity android:name=".ui.login.LoginActivity"/>
+		<activity android:name=".ui.login.LoginActivity"
+			android:windowSoftInputMode="adjustResize"/>
 
 		<service android:name=".services.authenticator.AuthenticatorService">
 			<intent-filter>

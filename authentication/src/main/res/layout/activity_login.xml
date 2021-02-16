@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout>
+<layout xmlns:android="http://schemas.android.com/apk/res/android">
 
-	<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	<LinearLayout
 		android:layout_width="fill_parent"
 		android:layout_height="fill_parent"
 		android:animateLayoutChanges="true"
@@ -14,7 +14,7 @@
 			android:layout_width="match_parent"
 			android:layout_height="wrap_content"
 			android:layout_marginTop="20dp"
-			android:hint="Full name"
+			android:hint="User Name"
 			android:inputType="textEmailAddress"
 			android:padding="10dp" />
 
@@ -51,6 +51,15 @@
 			android:gravity="center"
 			android:padding="10dp"
 			android:text="New user?" />
+
+
+		<TextView
+			style="@style/TextAppearance.AppCompat.Subhead"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			android:gravity="center"
+			android:text="@string/any_details_goes"
+			android:layout_weight="1"/>
 
 	</LinearLayout>
 </layout>

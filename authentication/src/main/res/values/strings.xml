@@ -5,4 +5,5 @@
 	<string name="login_failed">login failed</string>
 	<string name="new_user">New User?</string>
 	<string name="already_have_account">Already have account?</string>
+    <string name="any_details_goes">Any Details Goes</string>
 </resources>
