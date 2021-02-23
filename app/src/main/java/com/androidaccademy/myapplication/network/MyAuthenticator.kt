@@ -31,7 +31,7 @@ class MyAuthenticator : Authenticator {
 		// Get our current Refresh Token from AccountManagerProvider
 		// (we do something similar with our Access Token)
 
-		val currentRefreshToken = ""
+		val currentRefreshToken = AccountManagerProvider.getRefreshToken(App.instance)
 		AuthApi.instance.refreshToken(currentRefreshToken, App.instance)
 		Timber.e("token refreshed")
 	}

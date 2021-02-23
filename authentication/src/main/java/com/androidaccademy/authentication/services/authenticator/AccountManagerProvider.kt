@@ -26,5 +26,13 @@ class AccountManagerProvider {
 					.getResult()
 					.getString(AccountManager.KEY_AUTHTOKEN)
 			}
+
+		fun getRefreshToken(context: Context) =
+			getCurrentAccount(context)?.let { account ->
+				AccountManager.get(context)
+					.getAuthToken(account, REFRESH_TOKEN, null, null, null, null)
+					.getResult()
+					.getString(AccountManager.KEY_AUTHTOKEN)
+			}
 	}
 }

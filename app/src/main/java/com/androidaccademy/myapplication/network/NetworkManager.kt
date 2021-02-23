@@ -27,7 +27,7 @@ class NetworkManager {
 					}
 					// Exercise 1
 					// make any request inject header: "USER-AGENT": "Android"
-					// addInterceptor(UserAgentInterceptor())
+					addInterceptor(UserAgentInterceptor())
 					addInterceptor(newLoggingInterceptor())
 					authenticator(MyAuthenticator())
 				}
