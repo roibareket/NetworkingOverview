@@ -1,5 +1,6 @@
 package com.androidaccademy.myapplication.network
 
+import io.reactivex.Observable
 import retrofit2.Call
 import retrofit2.Response
 import retrofit2.http.*
@@ -10,6 +11,6 @@ interface GitHubService {
 	}
 
 	@GET("users/{user}/repos")
-	fun listRepos(@Path("user") user: String): Call<List<Repo>>
+	fun listRepos(@Path("user") user: String): Observable<List<Repo>>
 
 }

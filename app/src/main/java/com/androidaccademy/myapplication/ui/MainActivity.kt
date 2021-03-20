@@ -1,22 +1,15 @@
 package com.androidaccademy.myapplication.ui
 
 import android.os.Bundle
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
-import com.androidaccademy.authentication.services.authenticator.AccountManagerProvider
-import com.androidaccademy.authentication.ui.login.LoginActivity
+import androidx.lifecycle.ViewModelProvider
 import com.androidaccademy.myapplication.R
 import com.androidaccademy.myapplication.databinding.ActivityMainBinding
-import com.androidaccademy.myapplication.network.*
-import okhttp3.Protocol
-import okhttp3.Request
-import okhttp3.ResponseBody.Companion.toResponseBody
-import retrofit2.Call
-import retrofit2.Callback
-import retrofit2.Response
-import java.lang.Thread.sleep
 
 class MainActivity : AppCompatActivity() {
+	private val viewModel by lazy { ViewModelProvider(this).get(MainActivityViewModel::class.java) }
 	lateinit var binding: ActivityMainBinding
 
 	override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,80 +17,19 @@ class MainActivity : AppCompatActivity() {
 		binding = DataBindingUtil.setContentView(this, R.layout.activity_main)
 
 		binding.apply {
-			executePublicBtn.setOnClickListener {
-				executeGithubCall(NetworkManager().gitHubServicePublic)
+			testBtn.setOnClickListener {
+				viewModel.getDataFromMultipleRepos()
 			}
-			executePrivateBtn.setOnClickListener {
-				executeGithubCall(NetworkManager().gitHubServicePrivate)
-			}
-			testMyAuthenticator.setOnClickListener {
-				testMyAuthenticator()
-			}
-			login.setOnClickListener {
-				startActivity(
-					LoginActivity.newIntentAddNewAccount(
-						this@MainActivity,
-						getString(R.string.accountType)
-					)
-				)
-			}
+
+			viewModel.networkCallsProgressLiveData.observe(this@MainActivity, {
+				resultTxt.text = it.name
+			})
 		}
 
-	}
-
-	override fun onStart() {
-		super.onStart()
-		// don't ever do it. it's for demo only
-		Thread {
-			sleep(1000)
-			(AccountManagerProvider.getAccessToken(this@MainActivity)?.let {
-				R.string.user_logged_in
-			} ?: R.string.login_needed)
-				.let { loginResId ->
-					binding.loginStatus.post {
-						binding.loginStatus.setText(loginResId)
-					}
+		viewModel.networkCallsCompletedLiveEvent.observe(this, {
+				if(it.getContentIfNotHandled() == NetworkCallProgress.COMPLETED){
+					Toast.makeText(this, "Network call completed", Toast.LENGTH_SHORT).show()
 				}
-		}.start()
-	}
-
-	// everything below should be in view model
-
-	private fun executeGithubCall(githubApi: GitHubService) {
-		binding.resultTxt.text = ""
-		githubApi.listRepos("roibareket").enqueue(object :
-			Callback<List<Repo>> {
-			override fun onResponse(call: Call<List<Repo>>, response: Response<List<Repo>>) {
-				binding.resultTxt.text =
-					if (response.isSuccessful) {
-						response.body().orEmpty().toString()
-					} else {
-						response.message()
-					}
-			}
-
-			override fun onFailure(call: Call<List<Repo>>, t: Throwable) {
-				binding.resultTxt.text = t.toString()
-			}
 		})
-	}
-
-	private fun testMyAuthenticator() {
-		Thread {
-			okhttp3.Response.Builder()
-				.request(
-					Request.Builder()
-						.addHeader(AUTHORIZATION_HEADER, "my_access_token")
-						.url("https://github.com")
-						.build()
-				)
-				.protocol(Protocol.HTTP_1_1)
-				.code(401)
-				.message("test 401")
-				.body("test 401".toResponseBody(null))
-				.build().let { response ->
-					MyAuthenticator().authenticate(null, response)
-				}
-		}.start()
 	}
 }

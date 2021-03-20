@@ -3,33 +3,26 @@ package com.androidaccademy.myapplication.network
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
+import retrofit2.adapter.rxjava2.RxJava2CallAdapterFactory
 import retrofit2.converter.gson.GsonConverterFactory
 
 class NetworkManager {
 
-	val gitHubServicePublic: GitHubService
-	val gitHubServicePrivate: GitHubService
+	val gitHubService: GitHubService
 
 	init {
-		gitHubServicePublic = initGithubApiService(isAuthNeeded = false)
-		gitHubServicePrivate = initGithubApiService(isAuthNeeded = true)
+		gitHubService = initGithubApiService()
 	}
 
-	private fun initGithubApiService(isAuthNeeded: Boolean): GitHubService =
+	private fun initGithubApiService(): GitHubService =
 		Retrofit.Builder()
 			.baseUrl(GitHubService.BASE_URL)
 			.addConverterFactory(GsonConverterFactory.create())
-
+			.addCallAdapterFactory(RxJava2CallAdapterFactory.create())
 			.client(
 				OkHttpClient.Builder().apply {
-					if(isAuthNeeded) {
-						addInterceptor(AuthInterceptor())
-					}
-					// Exercise 1
-					// make any request inject header: "USER-AGENT": "Android"
-					addInterceptor(UserAgentInterceptor())
 					addInterceptor(newLoggingInterceptor())
-					authenticator(MyAuthenticator())
+					addInterceptor(NetworkDelayInterceptor())
 				}
 					.build()
 			)
