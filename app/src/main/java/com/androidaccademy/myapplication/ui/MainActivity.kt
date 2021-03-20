@@ -27,9 +27,9 @@ class MainActivity : AppCompatActivity() {
 		}
 
 		viewModel.networkCallsCompletedLiveEvent.observe(this, {
-				if(it.getContentIfNotHandled() == NetworkCallProgress.COMPLETED){
-					Toast.makeText(this, "Network call completed", Toast.LENGTH_SHORT).show()
-				}
+			if (it == NetworkCallProgress.COMPLETED) {
+				Toast.makeText(this, "Network call completed", Toast.LENGTH_SHORT).show()
+			}
 		})
 	}
 }

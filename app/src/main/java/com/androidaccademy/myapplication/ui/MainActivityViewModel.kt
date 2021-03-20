@@ -16,28 +16,16 @@ class MainActivityViewModel : ViewModel() {
 	val compositeDisposable = CompositeDisposable()
 	val networkCallsProgressLiveData = MutableLiveData(NetworkCallProgress.IDLE)
 	val networkCallsCompletedLiveEvent = networkCallsProgressLiveData
-		.map { Event(it) }
+
 
 	fun getDataFromMultipleRepos() {
-		Observables.combineLatest(
-			networkManager.gitHubService.listRepos("roibareket"),
-			networkManager.gitHubService.listRepos("parahall")
-		)
-			.doOnSubscribe { networkCallsProgressLiveData.postValue(NetworkCallProgress.EXECUTING) }
-			.doOnNext { networkCallsProgressLiveData.postValue(NetworkCallProgress.COMPLETED) }
-			.subscribeOn(Schedulers.io())
-			.map { (list1, list2) -> list1.plus(list2) }
+		//  networkManager.gitHubService.listRepos("parahall")
+			networkManager.gitHubService.listRepos("roibareket")
 			.subscribe({
 				Timber.i(it.toString())
 			}, {
 				Timber.i(it, "network failed")
 			})
-			.addTo(compositeDisposable)
-	}
-
-	override fun onCleared() {
-		super.onCleared()
-		compositeDisposable.clear()
 	}
 }
 
